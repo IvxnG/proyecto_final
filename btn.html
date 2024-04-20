@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostrar Productos</title>
+</head>
+<body>
+    <h1>Productos</h1>
+    <div id="productos"></div>
+    <button onclick="siguienteLote()">Siguiente Lote</button>
+
+    <script>
+        // Función para avanzar al siguiente lote
+        function siguienteLote() {
+            // Obtener el número de lote actual de la URL
+            let url = new URL(window.location.href);
+            let lote = parseInt(url.searchParams.get("lote")) || 1;
+
+            // Incrementar el número de lote
+            lote++;
+
+            // Actualizar la URL con el nuevo número de lote
+            url.searchParams.set("lote", lote);
+
+            // Redirigir a la nueva URL
+            window.location.href = url.toString();
+        }
+    </script>
+</body>
+</html>

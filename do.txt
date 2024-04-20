@@ -1,0 +1,13 @@
+tabal productos vendidos 
+relaciona id vendedor -- id comprador --id producto vendido
+
+tabla de productos vendiso -- loas p qu ese venden se borrar de la genara ly pasan aqui
+
+
+
+{
+    "lote": 1,
+    "filtros": {
+        "precio_min": 33
+    }
+}

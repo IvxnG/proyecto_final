@@ -1,0 +1,41 @@
+/* Estilos generales */
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Estilos del carrusel */
+.carousel-item {
+  position: relative; 
+  height: 100vh;
+}
+
+.carousel-item img {
+  max-height: 70%; 
+  max-width: 100%; 
+  display: block; 
+  margin: 0 auto; 
+}
+
+.carousel-caption {
+  text-align: center; 
+  color: #fff; 
+  background-color: rgba(0, 0, 0, 0.5); 
+}
+
+
+/* Estilos del pie de página */
+footer {
+  background-color: #3498db; 
+  color: white; 
+  padding: 20px 0;
+  text-align: center; 
+}
