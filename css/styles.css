@@ -1,13 +1,14 @@
 /* Estilos generales */
+/* rgb(173, 216, 230) , rgb(255, 180, 41) */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Montserrat", sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f2f2f2;
-    background-image: url('../assets/images/fondolog.jpg'); 
+    background-image: linear-gradient(rgb(173, 216, 230), rgb(255, 180, 41));
     background-size: cover;
-    background-position: center;
-}
+  }
 
 .container {
     width: 90%; 
@@ -16,74 +17,75 @@ body {
     padding: 20px;
 }
 
+/* header.css */
 .header {
-    background-color: #007bff; 
+    background-color: rgba(255, 255, 255, 0);
     color: #fff;
-    padding: 20px 0; 
+    padding: 20px;
+    text-align: center;
 }
 
 .header .logo img {
-    width: 40px; 
-    margin-right: 15px; 
+    width: 80px;
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .header h1 {
+    display: inline-block;
     margin: 0;
-    font-size: 1.8rem; 
+    font-size: 24px;
+    vertical-align: middle;
+}
+
+.navigation ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
 
 .navigation ul li {
-    display: inline-block; 
-    margin-right: 15px;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.navigation ul li:last-child {
+    margin-right: 0;
 }
 
 .navigation ul li a {
     text-decoration: none;
     color: #fff;
     font-weight: bold;
-    transition: color 0.3s ease; 
+    padding: 10px 20px;
+    border-radius: 4px;
+    background-color: rgba(173, 216, 230, 0);
+    transition: background-color 0.3s ease;
+    position: relative; 
+    text-transform: uppercase;
 }
 
-.navigation ul li a:hover {
-    color: #ffc107; 
-}
+/* .navigation ul li a:hover {
+    background-color: #0056b3;
+} */
 
-.main {
-    padding: 40px 0; 
-}
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 30px;
-}
-
-.card {
-    background-color: #fff;
-    border-radius: 10px; 
-    padding: 30px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-}
-
-.card img {
+.navigation ul li a::after { /* Añadido */
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
     width: 100%;
-    border-radius: 10px; 
+    height: 2px;
+    background-color: #fce38a;
+    color: #fce38a;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: right;
 }
 
-.card h3 {
-    margin-top: 15px; 
-    margin-bottom: 10px; 
-    font-size: 1.4rem; 
-}
-
-.card p {
-    color: #888; 
-    font-size: 1rem; 
-}
-
-.card .price {
-    display: block;
-    font-weight: bold;
-    color: #333;
-    margin-top: 15px; 
+.navigation ul li a:hover::after { /* Añadido */
+    transform: scaleX(1);
+    transform-origin: left;
 }

@@ -21,19 +21,20 @@ function mostrarProductos(productos) {
             card.classList.add('card');
 
             card.innerHTML = `
-                <div class="producto" id="producto-${producto.id_producto}">
-                    <img src="${producto.imagen}" alt="${producto.nombre}">
-                    <h3>${producto.nombre}</h3>
-                    <p>Precio: ${producto.precio} $</p>
-                    <p>Categoría: ${producto.categoria}</p>
-                    <p>Estado: ${producto.estado}</p>
+                <img src="https://picsum.photos/id/404/367/267" alt="${producto.nombre}"/>
+                <h3>${producto.nombre}</h3>
+                <div class="focus-content">
+                  <p>Estado: ${producto.estado}</p>
+                  <p>Categoria: ${producto.categoria}</p>
+                  <p>Precio: <b>${producto.precio} €</b></p>
+                  </p>
                 </div>
             `;
             productCardsContainer.appendChild(card);
         });
     }
 }
-const productoElement = document.getElementById(`producto-${producto.id_producto}`);
-productoElement.addEventListener('click', function () {
-    window.location.href = `detalle_producto.html?id_producto=${producto.id_producto}`;
-});
+// const productoElement = document.getElementById(`producto-${producto.id_producto}`);
+// productoElement.addEventListener('click', function () {
+//     window.location.href = `detalle_producto.html?id_producto=${producto.id_producto}`;
+// });
