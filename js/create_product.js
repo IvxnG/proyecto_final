@@ -28,6 +28,7 @@ document.getElementById('createProductForm').addEventListener('submit', function
         imagen: imagen
     };
     console.log(item.imagen);
+    console.log(item);
 
     
     enviarDatos(item);

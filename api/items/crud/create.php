@@ -1,30 +1,24 @@
 <?php
 require_once('../../db_connection.php');
 
-$data = json_decode(file_get_contents("php://input"), true);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['precio']) && isset($_POST['estado']) && isset($_POST['categoria']) && isset($_POST['id_usuario']) && isset($_FILES['imagen'])) {
+        $nombre = $_POST['nombre'];
+        $descripcion = $_POST['descripcion'];
+        $precio = $_POST['precio'];
+        $estado = $_POST['estado'];
+        $categoria = $_POST['categoria'];
+        $id_usuario = $_POST['id_usuario'];
+        $ubicacion = isset($_POST['ubicacion']) ? $_POST['ubicacion'] : null;
 
-if (!empty($data)) {
-    if (isset($data['nombre']) && isset($data['descripcion']) && isset($data['precio']) && isset($data['estado']) && isset($data['categoria']) && isset($data['id_usuario']) && isset($_FILES['imagen'])) {
-        $nombre = $conn->real_escape_string($data['nombre']);
-        $descripcion = $conn->real_escape_string($data['descripcion']);
-        $precio = $conn->real_escape_string($data['precio']);
-        $estado = $conn->real_escape_string($data['estado']);
-        $categoria = $conn->real_escape_string($data['categoria']);
-        $id_usuario = $conn->real_escape_string($data['id_usuario']);
-        $ubicacion = isset($data['ubicacion']) ? $conn->real_escape_string($data['ubicacion']) : null;
-        
-        // Procesar la imagen
-        $imagen = $_FILES['imagen'];
-        $nombreImagen = uniqid() . '_' . $imagen['name'];
-        $rutaImagen = '../../assets/images/' . $nombreImagen;
-        
-        // Mover la imagen al directorio de imágenes
-        if (move_uploaded_file($imagen['tmp_name'], $rutaImagen)) {
-            // Insertar la ruta de la imagen en la base de datos
+        $nombreImagen = uniqid() . '_' . $_FILES['imagen']['name'];
+        $rutaImagen = '../../../assets/images/' . $nombreImagen;
+
+        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaImagen)) {
             $sql_insert_product = "INSERT INTO productos (nombre, descripcion, precio, estado, categoria, id_usuario, ubicacion, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql_insert_product);
-            $stmt->bind_param("sssssssb", $nombre, $descripcion, $precio, $estado, $categoria, $id_usuario, $ubicacion, $nombreImagen);
-            
+            $stmt->bind_param("ssssssss", $nombre, $descripcion, $precio, $estado, $categoria, $id_usuario, $ubicacion, $nombreImagen);
+            // Ejecutar la consulta SQL
             if ($stmt->execute()) {
                 http_response_code(201);
                 echo json_encode(array("mensaje" => "Producto creado correctamente."));
@@ -41,9 +35,10 @@ if (!empty($data)) {
         echo json_encode(array("mensaje" => "Por favor, proporcione todos los datos necesarios (nombre, descripción, precio, estado, categoría, ID de usuario y una imagen)."));
     }
 } else {
-    http_response_code(400);
-    echo json_encode(array("mensaje" => "No se enviaron datos."));
+    http_response_code(405); // Método no permitido
+    echo json_encode(array("mensaje" => "Método no permitido."));
 }
 
+// Cerrar la conexión a la base de datos
 $conn->close();
-?>
+
