@@ -1,4 +1,16 @@
 <?php
+//Añadir las cabeceras CORS al inicio del archivo PHP
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Manejar solicitud OPTIONS
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 require_once('../../db_connection.php');
 
 $data = json_decode(file_get_contents("php://input"), true);
@@ -14,10 +26,18 @@ if (!empty($data)) {
         if ($result_get_user->num_rows == 1) {
             $row = $result_get_user->fetch_assoc();
             if (password_verify($contrasena, $row['contrasena'])) {
+                //JWT
+                // $key = 'ARAMCO';
+                // $now = strtolower("now");
+                // $payload = [
+                //     'exp' => $now + 3600,
+                //     'data' => $nombre_usuario,
+                // ];
+                // $jwt = JWT::encode($payload, $key, 'HS256');
+
                 $token = uniqid();
                 $expiracion = time() + (60 * 60); 
                 $id_usuario = $row['id'];
-            
                 http_response_code(200);
                 echo json_encode(array("token" => $token, "expiracion" => $expiracion, "id_usuario" => $id_usuario));
             } else {
@@ -39,4 +59,6 @@ if (!empty($data)) {
 }
 
 $conn->close();
-?>
+
+
+

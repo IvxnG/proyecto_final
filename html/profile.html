@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil de Usuario</title>
+    <link rel="shortcut icon" href="../assets/icono.png" />
+    <link rel="stylesheet" href="../css/profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Perfil de Usuario</h2>
+      <form id="profileForm" method="POST">
+        <div class="form-group">
+          <label for="nombre">Nombre completo:</label>
+          <input type="text" id="nombre" name="nombre" required />
+        </div>
+        <div class="form-group">
+          <label for="username">Nombre de usuario:</label>
+          <input type="text" id="username" name="nombre_usuario" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Correo electrónico:</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <button type="submit" id="actualizarBtn">Guardar Cambios</button>
+      </form>
+      <p><a href="#" id="logoutButton">Cerrar Sesión</a></p>
+      <a href="../index.html" class="btn-landing"
+        ><i class="fas fa-home"></i> Volver a la página principal</a
+      >
+    </div>
+    <h2>TUS PRODUCTOS EN VENTA</h2>
+    <div id="productosContainer" class="productos-container">
+      
+      <!-- Aquí se mostrarán los productos -->
+    </div>
+    <!-- Modal -->
+    <div id="editModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Editar Producto</h2>
+        <form id="editForm">
+          <div class="form-group">
+            <label for="editNombre">Nombre:</label>
+            <input type="text" id="editNombre" name="editNombre" required />
+          </div>
+          <div class="form-group">
+            <label for="editPrecio">Precio:</label>
+            <input type="number" id="editPrecio" name="editPrecio" required />
+          </div>
+          <div class="form-group">
+            <label for="editDescripcion">Descripción:</label>
+            <textarea
+              id="editDescripcion"
+              name="editDescripcion"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            <select id="editCategoria" name="categoria">
+              <option value="otros" selected>Otros</option>
+              <option value="electrodomesticos">Electrodomésticos</option>
+              <option value="electronicos">Electrónicos</option>
+              <option value="ropa">Ropa</option>
+              <option value="muebles">Muebles</option>
+              <option value="libros">Libros</option>
+              <option value="juguetes">Juguetes</option>
+              <option value="vehiculos">Vehículos</option>
+              <option value="instrumentos-musicales">
+                Instrumentos Musicales
+              </option>
+              <option value="articulos-deportivos">Artículos Deportivos</option>
+              <option value="herramientas">Herramientas</option>
+              <option value="arte-y-antiguedades">Arte y Antigüedades</option>
+              <option value="cuidado-personal">Cuidado Personal</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado:</label>
+            <select id="editEstado" name="estado" required>
+              <option value="Nuevo">Nuevo</option>
+              <option value="Usado">Usado</option>
+            </select>
+          </div>
+          <button type="submit" id="guardarCambiosBtn">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="alertMessage" class="alert-message"></div>
+    <script src="../js/profile.js"></script>
+  </body>
+</html>
+<style>
+  /* Estilos para los productos del usuario */
+  .productos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .producto {
+    width: 300px;
+    border: 1px solid #a09f9f;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    background-color: wheat;
+    border-radius: 5px;
+  }
+
+  .producto h3 {
+    margin-top: 0;
+  }
+  .btn-action {
+    margin-right: 5px;
+    cursor: pointer;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+  .btn-editar {
+    background-color: #28a745; /* Verde */
+    color: #fff;
+  }
+
+  .btn-borrar {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  .btn-borrar:hover {
+    background-color: #df182c;
+  }
+  .btn-editar:hover {
+    background-color: #0fc73a;
+  }
+</style>

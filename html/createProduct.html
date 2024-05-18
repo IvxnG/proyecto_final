@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Crear Producto</title>
+    <link rel="shortcut icon" href="../assets/icono.png" />
     <link rel="stylesheet" href="../css/form.css" />
   </head>
   <body>
     <h1>Crear Producto</h1>
-    <form id="createProductForm" enctype="multipart/form-data">
+    <form method="POST" id="createProductForm" enctype="multipart/form-data">
       <label for="imagen">Imagen del Producto:</label>
       <input type="file" id="imagen" name="imagen" />
       <label for="nombre">Nombre del Producto:</label>
@@ -21,17 +22,32 @@
       <input type="number" id="precio" name="precio" required />
       <br />
       <label for="categoria">Categoría:</label>
-      <input type="text" id="categoria" name="categoria" required />
+      <select id="categoria" name="categoria">
+        <option value="otros" selected>Otros</option>
+        <option value="electrodomesticos">Electrodomésticos</option>
+        <option value="electronicos">Electrónicos</option>
+        <option value="ropa">Ropa</option>
+        <option value="muebles">Muebles</option>
+        <option value="libros">Libros</option>
+        <option value="juguetes">Juguetes</option>
+        <option value="vehiculos">Vehículos</option>
+        <option value="instrumentos-musicales">Instrumentos Musicales</option>
+        <option value="articulos-deportivos">Artículos Deportivos</option>
+        <option value="herramientas">Herramientas</option>
+        <option value="arte-y-antiguedades">Arte y Antigüedades</option>
+        <option value="cuidado-personal">Cuidado Personal</option>
+    </select>
       <br />
       <label for="estado">Estado:</label>
       <select id="estado" name="estado" required>
-        <option value="nuevo">Nuevo</option>
-        <option value="usado">Usado</option>
+        <option value="Nuevo">Nuevo</option>
+        <option value="Usado">Usado</option>
       </select>
       <br />
       <button type="submit">Crear Producto</button>
     </form>
 
     <script src="../js/create_product.js"></script>
+    <div id="alertMessage" class="alert-message"></div>
   </body>
 </html>

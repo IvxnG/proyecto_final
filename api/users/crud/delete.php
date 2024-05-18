@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 require_once('../../db_connection.php');
 
 $data = json_decode(file_get_contents("php://input"), true);

@@ -1,9 +1,17 @@
 <?php
-require_once('../db_connection.php');
-$data = json_decode(file_get_contents("php://input"), true);
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-if (!empty($data['id_producto'])) {
-    $id_producto = intval($data['id_producto']);
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+
+require_once('../db_connection.php');
+
+if (isset($_GET['id'])) {
+    $id_producto = intval($_GET['id']);
 
     $sql = "SELECT * FROM productos WHERE id_producto = $id_producto";
 
@@ -23,4 +31,3 @@ if (!empty($data['id_producto'])) {
 }
 
 $conn->close();
-?>

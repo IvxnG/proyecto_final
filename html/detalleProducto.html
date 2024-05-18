@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyMarket - Detalle del Producto</title>
+    <link rel="shortcut icon" href="../assets/icono.png" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/details.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>EasyMarket</h1>
+            </div>
+            <br><br>
+            <nav class="navigation" id="navMenu">
+                <ul id="menuItems">
+                    <!-- El contenido del menú se generará dinámicamente -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Detalle del Producto</h2>
+        <div id="detalle-producto">
+            <!-- Detalle del producto se cargará aquí dinámicamente -->
+        </div>
+    </div>
+    <div id="alertMessage" class="alert-message"></div>
+    <!-- Modal  Reporte -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Reportar Producto</h2>
+            <form id="reportForm">
+                <div class="form-group">
+                    <p>Reportar este producto.</p>
+                    <p>Recuerda que solo se eliminará el producto si no es adecuado o no cumple con las normas de la web.</p>
+                </div>
+                <div class="form-group">
+                    <label for="reportMotivo">Motivo:</label>
+                    <textarea id="reportMotivo" name="reportMotivo" required></textarea>
+                </div>
+                <button type="submit" id="reportBtn">Reportar</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="../js/detalleProducto.js"></script>
+    <script src="../js/menu.js"></script>
+</body>
+</html>

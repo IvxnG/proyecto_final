@@ -1,4 +1,15 @@
 <?php
+// Añadir las cabeceras CORS al inicio del archivo PHP
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Manejar solicitud OPTIONS
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+
 require_once('../../db_connection.php');
 
 $data = json_decode(file_get_contents("php://input"), true);
@@ -62,10 +73,8 @@ function generateUniqueID($conn) {
     } while ($result_check_id->num_rows > 0 && $attempt < $max_attempts); 
 
     if ($attempt == $max_attempts) {
-        
         throw new Exception("No se pudo generar un ID único después de $max_attempts intentos.");
     }
 
     return $id_uniq;
 }
-?>
