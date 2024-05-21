@@ -69,6 +69,7 @@ document.getElementById('createProductForm').addEventListener('submit', function
 });
 
 function enviarDatos(formData) {
+    verificarYRedirigir();
     fetch('http://localhost/proyecto_final/api/items/crud/create.php', {
         method: 'POST',
         body: formData
@@ -77,9 +78,9 @@ function enviarDatos(formData) {
        if( response.status == 200 ){
         console.log(response);
         showAlert('Producto puesto en venta!', 'success');
-            // setTimeout(function() {
-            //     window.location.href = 'productos.html';
-            // }, 1000);
+            setTimeout(function() {
+                window.location.href = 'productos.html';
+            }, 1500);
         }    
     })
     .catch(error => {

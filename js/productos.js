@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('filtros-form').addEventListener('submit', function (event) {
         event.preventDefault();
-        obtenerProductos();
+        obtenerProductosConPaginacion();
     });
 
     document.getElementById('pagina-anterior').addEventListener('click', function () {
