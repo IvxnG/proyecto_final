@@ -33,8 +33,7 @@ async function verificarYRedirigir() {
 verificarYRedirigir();
 
 document.getElementById('createProductForm').addEventListener('submit', function(event) {
-    event.preventDefault(); 
-    console.log('Formulario enviado');
+    event.preventDefault();
 
     // Obtener los datos del formulario
     const nombre = document.getElementById('nombre').value;
@@ -45,12 +44,11 @@ document.getElementById('createProductForm').addEventListener('submit', function
     const idUsuario = localStorage.getItem('idUsuario');
     const imagenInput = document.getElementById('imagen');
     const imagen = imagenInput.files[0];
+    const token = localStorage.getItem('token'); // Obtener el token del localStorage
 
     if (!nombre || !descripcion || !precio || !categoria || !estado || !imagen) {
         showAlert('Completa todos los campos!', 'error');
-            setTimeout(function() {
-                
-        }, 4000);
+        setTimeout(function() {}, 4000);
         return; 
     }
 
@@ -63,30 +61,39 @@ document.getElementById('createProductForm').addEventListener('submit', function
     formData.append('estado', estado);
     formData.append('id_usuario', idUsuario);
     formData.append('imagen', imagen);
-    console.log(nombre);
+
     // Enviar datos al servidor
-    enviarDatos(formData);
+    enviarDatos(formData, token);
 });
 
-function enviarDatos(formData) {
-    verificarYRedirigir();
+function enviarDatos(formData, token) {
     fetch('http://localhost/proyecto_final/api/items/crud/create.php', {
         method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        },
         body: formData
     })
     .then(response => {
-       if( response.status == 200 ){
-        console.log(response);
-        showAlert('Producto puesto en venta!', 'success');
+        if (response.status == 200) {
+            showAlert('Producto puesto en venta!', 'success');
             setTimeout(function() {
                 window.location.href = 'productos.html';
-            }, 1500);
-        }    
+            }, 4000);
+        } else {
+                showAlert('Sesión no válida!', 'error');
+                localStorage.clear()
+                setTimeout(function() {
+                    window.location.href = '../index.html';
+                }, 2000);
+        }
     })
     .catch(error => {
         console.error('Hubo un problema con tu operación de fetch:', error);
+        showAlert('Error al conectar con el servidor', 'error');
     });
 }
+
 function showAlert(message, type = 'error') {
     const alertMessage = document.getElementById('alertMessage');
     alertMessage.textContent = message;

@@ -9,17 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     header("HTTP/1.1 200 OK");
     exit();
 }
-if (
-    (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'http://127.0.0.1:5500/') === false) &&
-    (!isset($_SERVER['HTTP_ORIGIN']) || strpos($_SERVER['HTTP_ORIGIN'], 'http://127.0.0.1:5500/') === false)
-) {
-    http_response_code(403);
-    echo json_encode(array("mensaje" => "Acceso no autorizado."));
-    exit();
-}
 
-
+require '../../../vendor/autoload.php';
 require_once('../../db_connection.php');
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -34,20 +28,25 @@ if (!empty($data)) {
         if ($result_get_user->num_rows == 1) {
             $row = $result_get_user->fetch_assoc();
             if (password_verify($contrasena, $row['contrasena'])) {
-                //JWT
-                // $key = 'ARAMCO';
-                // $now = strtolower("now");
-                // $payload = [
-                //     'exp' => $now + 3600,
-                //     'data' => $nombre_usuario,
-                // ];
-                // $jwt = JWT::encode($payload, $key, 'HS256');
+            
+                $key = 'ARAMCO33'; 
+                $issuedAt = time();
+                $expirationTime = $issuedAt + 7200; 
+                $payload = [
+                    'iss' => 'https://easymarketivan.000webhostapp.com/',
+                    'aud' => 'https://easymarketivan.000webhostapp.com/',
+                    'iat' => $issuedAt, 
+                    'exp' => $expirationTime, 
+                    'data' => [
+                        'id' => $row['id'],
+                        'nombre_usuario' => $nombre_usuario
+                    ]
+                ];
 
-                $token = uniqid();
-                $expiracion = time() + (60 * 60); 
-                $id_usuario = $row['id'];
+                $jwt = JWT::encode($payload, $key, 'HS256');
+
                 http_response_code(200);
-                echo json_encode(array("token" => $token, "expiracion" => $expiracion, "id_usuario" => $id_usuario));
+                echo json_encode(array("token" => $jwt, "expiracion" => $expirationTime, "id_usuario" => $row['id']));
             } else {
                 http_response_code(401);
                 echo json_encode(array("mensaje" => "Credenciales incorrectas."));

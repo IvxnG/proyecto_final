@@ -1,5 +1,14 @@
 const idUsuario = localStorage.getItem('idUsuario');
 let idProducto1;
+const token = localStorage.getItem("token");
+// Expresiones regulares para validaciones
+const regexNombreCompleto = /^[A-Za-z\s]+$/;
+const regexNombreUsuario = /^[A-Za-z0-9_]+$/;
+const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+let regexNombre = /^[A-Za-z\s]+$/;
+let regexPrecio = /^[0-9.,]+$/;
+let regexDescripcion = /.+/;
+
 
 fetch(`http://localhost/proyecto_final/api/users/auth/checkUser.php?idUsuario=${idUsuario}`)
   .then(response => response.json())
@@ -27,6 +36,7 @@ document.getElementById('logoutButton').addEventListener('click', function () {
   window.location.href = '../index.html';
 });
 
+
 function actualizarUsuario() {
   const nombreCompletoInput = document.getElementById('nombre');
   const nombreUsuarioInput = document.getElementById('username');
@@ -43,16 +53,20 @@ function actualizarUsuario() {
     {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(datosUsuario)
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.mensaje) {
-        showAlert(data.mensaje, 'success');
+    .then(response => {
+      if (response.status == 200) {
+        showAlert('Datos actualizados', 'success');
       } else {
-        showAlert('Datos no válidos', 'error');
+        showAlert('Sesión no válida!', 'error');
+        localStorage.clear()
+        setTimeout(function () {
+          window.location.href = '../index.html';
+        }, 2000);
       }
     })
     .catch(error => {
@@ -131,20 +145,24 @@ function eliminarProducto(idProducto) {
     fetch('http://localhost/proyecto_final/api/items/crud/delete.php', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify(datosProducto)
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al eliminar el producto');
+        if (response.status == 200) {
+          showAlert('Producto eliminado!', 'success');
+          setTimeout(function () {
+            window.location.href = 'productos.html';
+          }, 4000);
+        } else {
+          showAlert('Sesión no válida!', 'error');
+          localStorage.clear()
+          setTimeout(function () {
+            window.location.href = '../index.html';
+          }, 2000);
         }
-        console.log(response);
-        return response.json();
-      })
-      .then(data => {
-        showAlert(data.mensaje, 'success');
-        window.location.reload();
       })
       .catch(error => {
         showAlert('Error al eliminar el producto', 'error');
@@ -174,7 +192,7 @@ function closeModal() {
 }
 
 document.getElementById('editForm').addEventListener('submit', function (event) {
-  event.preventDefault(); 
+  event.preventDefault();
 
   // Obtén los datos del formulario
   const nombre = document.getElementById('editNombre').value;
@@ -184,7 +202,7 @@ document.getElementById('editForm').addEventListener('submit', function (event) 
   const estado = document.getElementById('editEstado').value;
 
   const datosProducto = {
-    id_producto: idProducto1, 
+    id_producto: idProducto1,
     nombre: nombre,
     precio: precio,
     descripcion: descripcion,
@@ -192,27 +210,41 @@ document.getElementById('editForm').addEventListener('submit', function (event) 
     estado: estado
   };
 
-  // Comprobar si los campos tienen datos
-  if (!nombre || !precio || !descripcion || !categoria || !estado) {
-    showAlert('Completa todos los campos.', 'error');
-    return; 
+  function validarDatosProducto(nombre, precio, descripcion) {
+    let esNombreValido = regexNombre.test(nombre);
+    let esPrecioValido = regexPrecio.test(precio);
+    let esDescripcionValida = regexDescripcion.test(descripcion);
+
+    return esNombreValido && esPrecioValido && esDescripcionValida;
   }
 
+  let resultado = validarDatosProducto(nombre, precio, descripcion);
+  if (!resultado) {
+    showAlert('Completa todos los campos de manera correcta.', 'error');
+    return;
+  }
   // Realiza la solicitud fetch al PHP de actualización
   fetch(`http://localhost/proyecto_final/api/items/crud/update.php`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
     },
     body: JSON.stringify(datosProducto)
   })
-    .then(response => {console.log(response);})
-    .then(data => {
-      showAlert('Datos actualizados', 'success');
-      setTimeout(function () {
-        closeModal();
-        window.location.reload();
-      }, 1000);
+    .then(response => { 
+      if (response.status == 200) {
+        showAlert('Producto actualizado!', 'success');
+        setTimeout(function() {
+          window.location.reload()
+      }, 2000);
+    } else {
+            showAlert('Sesión no válida!', 'error');
+            localStorage.clear()
+            setTimeout(function() {
+                window.location.href = '../index.html';
+            }, 2000);
+    }
     })
     .catch(error => {
       alert('Error al actualizar el producto: ' + error);

@@ -9,14 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     header("HTTP/1.1 200 OK");
     exit();
 }
-if (
-    (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'http://127.0.0.1:5500/') === false) &&
-    (!isset($_SERVER['HTTP_ORIGIN']) || strpos($_SERVER['HTTP_ORIGIN'], 'http://127.0.0.1:5500/') === false)
-) {
-    http_response_code(403);
-    echo json_encode(array("mensaje" => "Acceso no autorizado."));
-    exit();
-}
 require_once('../../db_connection.php');
 
 $data = json_decode(file_get_contents("php://input"), true);

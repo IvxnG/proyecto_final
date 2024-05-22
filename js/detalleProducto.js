@@ -100,7 +100,8 @@ function comprarItem(id) {
             fetch('http://localhost/proyecto_final/api/items/crud/delete.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token 
                 },
                 body: JSON.stringify(datosProducto)
             })
