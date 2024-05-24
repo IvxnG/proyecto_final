@@ -41,6 +41,16 @@ function actualizarUsuario() {
   const nombreCompletoInput = document.getElementById('nombre');
   const nombreUsuarioInput = document.getElementById('username');
   const emailInput = document.getElementById('email');
+  const regexNombreCompleto = /^[A-Za-z\s]+$/;
+  const regexNombreUsuario = /^[A-Za-z0-9_]+$/;
+  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!regexNombreCompleto.test(nombreCompletoInput.value) || 
+      !regexNombreUsuario.test(nombreUsuarioInput.value) || 
+      !regexEmail.test(emailInput.value)) 
+      {
+        showAlert('Datos incompleto o no válidos', 'error');
+        return
+      }
   const datosUsuario = {
     id_usuario: idUsuario,
     nombre_completo: nombreCompletoInput.value,
@@ -73,6 +83,46 @@ function actualizarUsuario() {
       showAlert('Error al actualizar los datos', 'error');
     });
 }
+
+fetch(`http://localhost/proyecto_final/api/items/getSellsByUser.php?id_usuario=${idUsuario}`, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + token
+  }
+})
+  .then(response => {
+    console.log(response);
+    if (response.status === 200) {
+      return response.json();
+    }
+  })
+  .then(data => {
+    let comprados = document.getElementById("productosContainer2");
+    if (data.length > 0 ) {
+      comprados.innerHTML = "";
+      data.forEach(producto => {
+        console.log('ID del producto:', producto.id_producto);
+        fetch(`http://localhost/proyecto_final/api/items/getDetails.php?id=${producto.id_producto}`)
+          .then(response => response.json())
+          .then(detallesProducto => {
+            const productoHTML = `
+              <div class="producto">
+                <h3><b>${detallesProducto.nombre}</b></h3>
+                <p>Precio: ${detallesProducto.precio}€</p>
+                <p>Categoría: ${detallesProducto.categoria}</p>
+                <img style="width:120px; border: solid 1px black; border-radius:20px" src="data:image/jpeg;base64,${detallesProducto.imagen}" alt="${detallesProducto.nombre}">
+              </div>
+            `;
+            comprados.innerHTML += productoHTML;
+          })
+          .catch(error => console.error('Error al obtener detalles del producto:', error));
+      });
+    } else {
+      comprados.innerHTML = '<p>No hay productos comprados para este usuario.</p>';
+    }
+  })
+
 document.getElementById('actualizarBtn').addEventListener('click', function (event) {
   event.preventDefault();
   actualizarUsuario();
@@ -232,19 +282,19 @@ document.getElementById('editForm').addEventListener('submit', function (event) 
     },
     body: JSON.stringify(datosProducto)
   })
-    .then(response => { 
+    .then(response => {
       if (response.status == 200) {
         showAlert('Producto actualizado!', 'success');
-        setTimeout(function() {
+        setTimeout(function () {
           window.location.reload()
-      }, 2000);
-    } else {
-            showAlert('Sesión no válida!', 'error');
-            localStorage.clear()
-            setTimeout(function() {
-                window.location.href = '../index.html';
-            }, 2000);
-    }
+        }, 2000);
+      } else {
+        showAlert('Sesión no válida!', 'error');
+        localStorage.clear()
+        setTimeout(function () {
+          window.location.href = '../index.html';
+        }, 2000);
+      }
     })
     .catch(error => {
       alert('Error al actualizar el producto: ' + error);

@@ -56,7 +56,7 @@ $conn->close();
 
 function generateUniqueID($conn) {
     $id_length = 10;
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789';
     $id_uniq = '';
     $max_attempts = 10;
     $attempt = 0;

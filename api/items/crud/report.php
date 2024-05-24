@@ -15,14 +15,7 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-if (
-    (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'http://127.0.0.1:5500/') === false) &&
-    (!isset($_SERVER['HTTP_ORIGIN']) || strpos($_SERVER['HTTP_ORIGIN'], 'http://127.0.0.1:5500/') === false)
-) {
-    http_response_code(403);
-    echo json_encode(array("mensaje" => "Acceso no autorizado."));
-    exit();
-}
+
 $data = json_decode(file_get_contents("php://input"), true);
 
 if(isset($data['id_producto']) && isset($data['motivo'])){

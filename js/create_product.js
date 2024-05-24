@@ -44,7 +44,7 @@ document.getElementById('createProductForm').addEventListener('submit', function
     const idUsuario = localStorage.getItem('idUsuario');
     const imagenInput = document.getElementById('imagen');
     const imagen = imagenInput.files[0];
-    const token = localStorage.getItem('token'); // Obtener el token del localStorage
+    let token = localStorage.getItem('token'); // Obtener el token del localStorage
 
     if (!nombre || !descripcion || !precio || !categoria || !estado || !imagen) {
         showAlert('Completa todos los campos!', 'error');

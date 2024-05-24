@@ -86,6 +86,7 @@ async function verificarYRedirigir() {
 
 function comprarItem(id) {
     let idComprobar = localStorage.getItem("idUsuario")
+    let token = localStorage.getItem("token")
     if (idUser == idComprobar) {
         showAlert('No puedes comprar tu propio producto!', 'error');
         setTimeout(function () {
@@ -93,11 +94,12 @@ function comprarItem(id) {
         }, 2000);
     } else {
         if (confirm("¿Estás seguro de que quieres comprar este producto?")) {
-            const datosProducto = {
-                id_producto: id
+            let datosProducto = {
+                id_producto: id,
+                id_usuario: localStorage.getItem("idUsuario")
             };
 
-            fetch('http://localhost/proyecto_final/api/items/crud/delete.php', {
+            fetch('http://localhost/proyecto_final/api/items/crud/buy.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,9 +121,9 @@ function comprarItem(id) {
                 })
                 .catch(error => {
                     showAlert('Error al comprar el producto', 'error');
-                    setTimeout(function () {
-                        window.location.href = '../index.html';
-                    }, 3000);
+                    // setTimeout(function () {
+                    //     window.location.href = '../index.html';
+                    // }, 3000);
                 });
         }
     }
