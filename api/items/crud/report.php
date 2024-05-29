@@ -1,24 +1,32 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With,Content-Type, Authorization");
+header("Allow: GET, POST, PUT, DELETE, OPTIONS");
 
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    header("HTTP/1.1 200 OK");
-    exit();
-}
+require '../../db_connection.php';
+require_once('../../../vendor/autoload.php');
 
-require_once('../../db_connection.php');
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $header = apache_request_headers();
+    if ($header['authorization']){
+        $jwt = str_replace('Bearer ', '', $header['authorization']);
+    }
+     // Verificar si el token está expirado
+     if ($decoded_array['exp'] < time()) {
+        http_response_code(401);
+        echo json_encode(array("mensaje" => "Token expirado"));
+        exit();
+    }
+    $data = json_decode(file_get_contents("php://input"), true);
 
-
-$data = json_decode(file_get_contents("php://input"), true);
-
-if(isset($data['id_producto']) && isset($data['motivo'])){
+    $key = 'ARAMCO33';
+    $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+    $decoded_array = (array) $decoded;
+    $id_usuario_token = $decoded_array['data']->id;
     $idProducto = $data['id_producto'];
     $motivo = $data['motivo'];
 
@@ -28,20 +36,17 @@ if(isset($data['id_producto']) && isset($data['motivo'])){
     if ($stmt) {
         $stmt->bind_param("is", $idProducto, $motivo);
         if ($stmt->execute()) {
-            $response = ["success" => true, "message" => "El producto ha sido reportado correctamente."];
-            echo json_encode($response);
+            http_response_code(200);
+            echo json_encode(array("message" => "El producto ha sido reportado correctamente."));
         } else {
-            $response = ["success" => false, "message" => "Error al reportar el producto."];
-            echo json_encode($response);
+            http_response_code(400);
+            echo json_encode(array("message" => "Error en el reporte"));
         }
         $stmt->close();
     } else {
-        $response = ["success" => false, "message" => "Error al preparar la consulta."];
-        echo json_encode($response);
+        http_response_code(400);
+        echo json_encode(array("message" => "Error en el reporte"));
     }
-} else {
-    $response = ["success" => false, "message" => "Datos incompletos o incorrectos recibidos."];
-    echo json_encode($response);
 }
 
 $conn->close();

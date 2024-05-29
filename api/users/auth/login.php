@@ -42,7 +42,6 @@ if (!empty($data)) {
                         'nombre_usuario' => $nombre_usuario
                     ]
                 ];
-
                 $jwt = JWT::encode($payload, $key, 'HS256');
 
                 http_response_code(200);

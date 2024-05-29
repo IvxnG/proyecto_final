@@ -19,18 +19,16 @@ if ($conn->connect_error) {
 
 // Obtener el token del encabezado de la solicitud
 $headers = getallheaders();
-
-// if (!isset($headers['Authorization'])) {
-//     http_response_code(401);
-//     echo json_encode(array("mensaje" => "Token no proporcionado"));
-//     exit();
-// }
+if (!isset($headers['Authorization'])) {
+    http_response_code(401);
+    echo json_encode(array("mensaje" => "Token no proporcionado"));
+    exit();
+}
 
 $jwt = str_replace('Bearer ', '', $headers['Authorization']);
 
 $data = json_decode(file_get_contents("php://input"), true);
-
-try {
+if (isset($data['id_producto']) && isset($data['motivo'])) {
     $key = 'ARAMCO33';
     $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
     $decoded_array = (array) $decoded;
@@ -44,32 +42,29 @@ try {
 
     // Verificar los datos del usuario en el token
     $id_usuario_token = $decoded_array['data']->id;
+    $idProducto = $data['id_producto'];
+    $motivo = $data['motivo'];
 
-    $id_producto = intval($data['id_producto']);
-    $id_usuario_comprador = intval($data['id_usuario']);
+    $sql = "INSERT INTO reportes (id_producto, motivo) VALUES (?, ?)";
+    $stmt = $conn->prepare($sql);
 
-    $sql1 = "INSERT INTO sells (id_producto, id_usuario) VALUES (?, ?)";
-    $stmt1 = $conn->prepare($sql1);
-    $stmt1->bind_param('ii', $id_producto, $id_usuario_comprador);
-
-    $sql2 = "UPDATE productos SET active = false WHERE id_producto = ?";
-    $stmt2 = $conn->prepare($sql2);
-    $stmt2->bind_param('i', $id_producto);
-
-    if ($stmt1->execute() && $stmt2->execute()) {
-        http_response_code(200);
-        echo json_encode(array("mensaje" => "Producto desactivado correctamente."));
+    if ($stmt) {
+        $stmt->bind_param("is", $idProducto, $motivo);
+        if ($stmt->execute()) {
+            $response = ["success" => true, "message" => "El producto ha sido reportado correctamente."];
+            echo json_encode($response);
+        } else {
+            $response = ["success" => false, "message" => "Error al reportar el producto."];
+            echo json_encode($response);
+        }
+        $stmt->close();
     } else {
-        http_response_code(500);
-        echo json_encode(array("mensaje" => "Error al desactivar el producto: " . $conn->error));
+        $response = ["success" => false, "message" => "Error al preparar la consulta."];
+        echo json_encode($response);
     }
-
-    $stmt1->close();
-    $stmt2->close();
-} catch (Exception $e) {
-    http_response_code(400);
-    echo json_encode(array("mensaje" => "Error procesando la solicitud", "error" => $e->getMessage()));
-    exit();
+} else {
+    $response = ["success" => false, "message" => "Datos incompletos o incorrectos recibidos."];
+    echo json_encode($response);
 }
 
 $conn->close();

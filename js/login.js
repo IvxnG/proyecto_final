@@ -70,7 +70,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
         showAlert('Inicio de sesión exitoso!', 'success');
         setTimeout(function() {
-            window.location.href = '../index.html';
+            window.location.href = 'productos.html';
         }, 3000);
     })
     .catch(function(error) {

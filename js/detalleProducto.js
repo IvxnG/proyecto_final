@@ -1,4 +1,4 @@
-verificarYRedirigir();
+//verificarYRedirigir();
 
 document.addEventListener('DOMContentLoaded', function () {
     mostrarDetalleProducto();
@@ -85,8 +85,9 @@ async function verificarYRedirigir() {
 }
 
 function comprarItem(id) {
-    let idComprobar = localStorage.getItem("idUsuario")
-    let token = localStorage.getItem("token")
+    let idComprobar = localStorage.getItem("idUsuario");
+    const token = localStorage.getItem("token");
+    console.log(token);
     if (idUser == idComprobar) {
         showAlert('No puedes comprar tu propio producto!', 'error');
         setTimeout(function () {
@@ -102,24 +103,29 @@ function comprarItem(id) {
             fetch('http://localhost/proyecto_final/api/items/crud/buy.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token 
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(datosProducto)
             })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al comprar el producto');
+                    console.log(response);
+                    if (response.status == 200) {
+                        return response.json();
+                    }else{
+                        showAlert('La compra no pudo hacerse!', 'error');
                     }
-                    return response.json();
+                   
                 })
                 .then(data => {
+                    console.log(data)
                     showAlert('La compra se realizo de manera exitosa!', 'success');
-                    setTimeout(function () {
-                        window.location.href = '../index.html';
-                    }, 3000);
+                    // setTimeout(function () {
+                    //     window.location.href = 'profile.html';
+                    // }, 3000);
                 })
                 .catch(error => {
+                    console.log(error)
                     showAlert('Error al comprar el producto', 'error');
                     // setTimeout(function () {
                     //     window.location.href = '../index.html';
@@ -146,6 +152,7 @@ function closeModal() {
 
 function reportarItem(idProducto) {
     const motivo = document.getElementById('reportMotivo').value;
+    let token = localStorage.getItem("token")
 
     if (!motivo.trim()) {
         showAlert('Debes proporcionar un motivo para el reporte.', 'error');
@@ -160,7 +167,8 @@ function reportarItem(idProducto) {
     fetch('http://localhost/proyecto_final/api/items/crud/report.php', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify(datosReporte)
     })

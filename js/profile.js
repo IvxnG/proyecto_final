@@ -10,7 +10,7 @@ let regexPrecio = /^[0-9.,]+$/;
 let regexDescripcion = /.+/;
 
 
-fetch(`http://localhost/proyecto_final/api/users/auth/checkUser.php?idUsuario=${idUsuario}`)
+fetch(`https://easymarketivan.000webhostapp.com/api/users/auth/checkUser.php?idUsuario=${idUsuario}`)
   .then(response => response.json())
   .then(data => {
     // Verificar si el usuario existe
@@ -22,7 +22,7 @@ fetch(`http://localhost/proyecto_final/api/users/auth/checkUser.php?idUsuario=${
   })
   .catch(error => console.error('Error al verificar el usuario:', error));
 
-fetch(`http://localhost/proyecto_final/api/users/crud/getUser.php?idUsuario=${idUsuario}`)
+fetch(`https://easymarketivan.000webhostapp.com/api/users/crud/getUser.php?idUsuario=${idUsuario}`)
   .then(response => response.json())
   .then(data => {
     document.getElementById('nombre').value = data.nombre_completo;
@@ -49,7 +49,7 @@ function actualizarUsuario() {
       !regexEmail.test(emailInput.value)) 
       {
         showAlert('Datos incompleto o no válidos', 'error');
-        return
+        return;
       }
   const datosUsuario = {
     id_usuario: idUsuario,
@@ -59,7 +59,7 @@ function actualizarUsuario() {
   };
 
   // Realizar solicitud Fetch para actualizar el usuario
-  fetch(`http://localhost/proyecto_final/api/users/crud/update.php`,
+  fetch(`https://easymarketivan.000webhostapp.com/api/users/crud/update.php`,
     {
       method: 'PUT',
       headers: {
@@ -69,11 +69,12 @@ function actualizarUsuario() {
       body: JSON.stringify(datosUsuario)
     })
     .then(response => {
+      console.log(JSON.stringify(datosUsuario));
       if (response.status == 200) {
         showAlert('Datos actualizados', 'success');
       } else {
         showAlert('Sesión no válida!', 'error');
-        localStorage.clear()
+        localStorage.clear();
         setTimeout(function () {
           window.location.href = '../index.html';
         }, 2000);
@@ -84,7 +85,7 @@ function actualizarUsuario() {
     });
 }
 
-fetch(`http://localhost/proyecto_final/api/items/getSellsByUser.php?id_usuario=${idUsuario}`, {
+fetch(`https://easymarketivan.000webhostapp.com/api/items/getSellsByUser.php?id_usuario=${idUsuario}`, {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -103,7 +104,7 @@ fetch(`http://localhost/proyecto_final/api/items/getSellsByUser.php?id_usuario=$
       comprados.innerHTML = "";
       data.forEach(producto => {
         console.log('ID del producto:', producto.id_producto);
-        fetch(`http://localhost/proyecto_final/api/items/getDetails.php?id=${producto.id_producto}`)
+        fetch(`https://easymarketivan.000webhostapp.com/api/items/getDetails.php?id=${producto.id_producto}`)
           .then(response => response.json())
           .then(detallesProducto => {
             const productoHTML = `
@@ -121,7 +122,7 @@ fetch(`http://localhost/proyecto_final/api/items/getSellsByUser.php?id_usuario=$
     } else {
       comprados.innerHTML = '<p>No hay productos comprados para este usuario.</p>';
     }
-  })
+  });
 
 document.getElementById('actualizarBtn').addEventListener('click', function (event) {
   event.preventDefault();
@@ -141,7 +142,7 @@ function showAlert(message, type = 'error') {
   }, 3000);
 }
 
-fetch(`http://localhost/proyecto_final/api/items/getUserProducts.php`, {
+fetch(`https://easymarketivan.000webhostapp.com/api/items/getUserProducts.php`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -156,7 +157,7 @@ fetch(`http://localhost/proyecto_final/api/items/getUserProducts.php`, {
   })
   .then(data => {
     if (data && data.length > 0) {
-      mostrarProductos(data)
+      mostrarProductos(data);
     }
   })
   .catch(error => {
@@ -192,7 +193,7 @@ function eliminarProducto(idProducto) {
       id_producto: idProducto
     };
 
-    fetch('http://localhost/proyecto_final/api/items/crud/delete.php', {
+    fetch('https://easymarketivan.000webhostapp.com/api/items/crud/delete.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -208,7 +209,7 @@ function eliminarProducto(idProducto) {
           }, 4000);
         } else {
           showAlert('Sesión no válida!', 'error');
-          localStorage.clear()
+          localStorage.clear();
           setTimeout(function () {
             window.location.href = '../index.html';
           }, 2000);
@@ -223,8 +224,8 @@ function eliminarProducto(idProducto) {
 
 function editarProducto(idProducto) {
   // Obtener detalles del producto
-  idProducto1 = idProducto
-  fetch(`http://localhost/proyecto_final/api/items/getDetails.php?id=${idProducto1}`)
+  idProducto1 = idProducto;
+  fetch(`https://easymarketivan.000webhostapp.com/api/items/getDetails.php?id=${idProducto1}`)
     .then(response => response.json())
     .then(producto => {
       document.getElementById('editNombre').value = producto.nombre;
@@ -274,7 +275,7 @@ document.getElementById('editForm').addEventListener('submit', function (event) 
     return;
   }
   // Realiza la solicitud fetch al PHP de actualización
-  fetch(`http://localhost/proyecto_final/api/items/crud/update.php`, {
+  fetch(`https://easymarketivan.000webhostapp.com/api/items/crud/update.php`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
